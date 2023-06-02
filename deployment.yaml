@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ultracloud-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ultracloud
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: ultracloud
+    spec:
+      containers:
+      - name: ultracloud
+        image: 769993731789.dkr.ecr.us-east-1.amazonaws.com/ultraimage
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ultracloud
+    k8s-app: ultracloud
+  name: ultracloud
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  type: LoadBalancer
+  selector:
+    app: ultracloud
